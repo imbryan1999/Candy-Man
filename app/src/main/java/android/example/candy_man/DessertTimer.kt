@@ -1,9 +1,12 @@
 package android.example.candy_man
 
 import android.os.Handler
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import timber.log.Timber
 
-class DessertTimer {
+class DessertTimer(lifecycle: Lifecycle) : LifecycleObserver {
 
     // The number of seconds counted since the timer started
     var secondsCount = 0
@@ -15,9 +18,14 @@ class DessertTimer {
     private var handler = Handler()
     private lateinit var runnable: Runnable
 
-    fun startTimer(){
+    init {
+        lifecycle.addObserver(this)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun startTimer() {
         runnable = Runnable {
-            secondsCount ++
+            secondsCount++
             Timber.i("Timer is at : $secondsCount")
             // postDelayed re-adds the action to the queue of actions the Handler is cycling
             // through. The delayMillis param tells the handler to run the runnable in
@@ -32,7 +40,8 @@ class DessertTimer {
         // In this case, no looper is defined, and it defaults to the main or UI thread.
     }
 
-    fun stopTimer(){
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun stopTimer() {
         // Removes all pending posts of runnable from the handler's queue, effectively stopping the
         // timer
         handler.removeCallbacks(runnable)

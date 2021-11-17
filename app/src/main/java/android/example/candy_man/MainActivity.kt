@@ -3,7 +3,6 @@ package android.example.candy_man
 import android.content.ActivityNotFoundException
 import android.example.candy_man.databinding.ActivityMainBinding
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -20,6 +19,8 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     // Contains all the views
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var dessertTimer: DessertTimer
 
     /** Dessert Data **/
 
@@ -66,6 +67,8 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
         }
+
+        dessertTimer = DessertTimer()
 
         // Set the TextViews to the right values
         binding.revenue = revenue
@@ -146,6 +149,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     override fun onStart() {
         super.onStart()
         Timber.i("onStart called")
+        dessertTimer.startTimer()
     }
 
     override fun onResume() {
@@ -161,6 +165,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     override fun onStop() {
         super.onStop()
         Timber.i("onStop called")
+        dessertTimer.stopTimer()
     }
 
     override fun onDestroy() {
